@@ -1,5 +1,7 @@
+import type { RedisService } from "../infrastructure/otp/redis-service.js";
 import type { PasswordHasher } from "../interfaces/password-hasher.interface.js";
 import type { PasswordRepository } from "../interfaces/password-repository.interface.js";
+import type { PendingSignupRepository } from "../interfaces/pending-signup-repository.interface.js";
 import type { TokenService } from "../interfaces/token-service.interface.js";
 import type { UserRepository } from "../interfaces/user-repository.interface.js";
 import type { loginResult } from "../types/auth.types.js";
@@ -10,9 +12,11 @@ export class AuthService {
     private readonly passwordRepository: PasswordRepository,
     private readonly passwordHasher: PasswordHasher,
     private readonly tokenService: TokenService,
+    private readonly redisService: RedisService,
+    private readonly pendingSignupRepository: PendingSignupRepository,
   ) {}
 
-  // register new user service (email + password)
+  // send otp for verify the email
   async register(name: string, email: string, password: string) {
     const existingUser = await this.userRepository.findByEmail(email);
 
@@ -20,17 +24,17 @@ export class AuthService {
       throw new Error("User with this email already exists");
     }
 
-    const user = await this.userRepository.createUser(
-      name,
-      email,
-      "normal_user",
-    );
-
     const passwordHash = await this.passwordHasher.hash(password);
 
-    await this.passwordRepository.create(user.id, passwordHash);
+    await this.pendingSignupRepository.save(email, {
+      name,
+      email,
+      passwordHash,
+    });
 
-    return user;
+    const OTP = await this.redisService.generateOtp(email);
+
+    console.log("Email verification otp : ", OTP);
   }
 
   // login via password service
