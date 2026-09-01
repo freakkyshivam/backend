@@ -17,10 +17,9 @@ export class JwtTokenService implements TokenService{
     }
 
     // refresh token
-    generateRefreshToken(payload: { userId: string; role: UserRole; }): string {
+    generateRefreshToken(payload: { userId: string;}): string {
         return jwt.sign({
             userId : payload.userId, 
-            role : payload.userId
         },
         process.env.JWT_REFRESH_SECRET!,{
             expiresIn : "7d"

@@ -49,7 +49,7 @@ export class AuthService {
 
     const valid = await this.passwordHasher.verify(
       password,
-      passwordH?.passwordHash,
+      passwordH.passwordHash,
     );
 
     if (!valid) {
@@ -63,7 +63,6 @@ export class AuthService {
 
     const refreshToken = this.tokenService.generateRefreshToken({
       userId : user.id,
-      role : user.role
     })
 
     return {

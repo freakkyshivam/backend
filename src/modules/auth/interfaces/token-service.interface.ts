@@ -8,6 +8,5 @@ export interface TokenService {
 
   generateRefreshToken(payload: {
     userId: string;
-    role: UserRole;
   }): string;
 }
