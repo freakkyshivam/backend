@@ -2,9 +2,11 @@ import type { RedisService } from "../infrastructure/otp/redis-service.js";
 import type { PasswordHasher } from "../interfaces/password-hasher.interface.js";
 import type { PasswordRepository } from "../interfaces/password-repository.interface.js";
 import type { PendingSignupRepository } from "../interfaces/pending-signup-repository.interface.js";
+import type { SessionRepository } from "../interfaces/session-repository.interface.js";
 import type { TokenService } from "../interfaces/token-service.interface.js";
 import type { UserRepository } from "../interfaces/user-repository.interface.js";
 import type { loginResult } from "../types/auth.types.js";
+import crypto from 'node:crypto'
 
 export class AuthService {
   constructor(
@@ -14,6 +16,7 @@ export class AuthService {
     private readonly tokenService: TokenService,
     private readonly redisService: RedisService,
     private readonly pendingSignupRepository: PendingSignupRepository,
+    private readonly sessionRepository : SessionRepository
   ) {}
 
   // send otp for verify the email
@@ -69,7 +72,7 @@ async verifyEmail(email: string, otp: string) {
 }
 
   // login via password service
-  async login(email: string, password: string): Promise<loginResult> {
+  async login(email: string, password: string, userAgent?: string): Promise<loginResult> {
     const user = await this.userRepository.findByEmail(email);
 
     if (!user) {
@@ -104,9 +107,29 @@ async verifyEmail(email: string, otp: string) {
       userId: user.id,
     });
 
+    const sid = crypto.randomUUID();
+
+     const refreshTokenHash = crypto
+    .createHash("sha256")
+    .update(refreshToken)
+    .digest("hex");
+
+  const expiresAt = new Date(
+    Date.now() + 7 * 24 * 60 * 60 * 1000
+  );
+
+  await this.sessionRepository.create(
+    sid,
+    user.id,
+    refreshTokenHash,
+    expiresAt,
+    userAgent
+  );
+
     return {
       accessToken,
       refreshToken,
+      sid,
       user: {
         id: user.id,
         email: user.email,
