@@ -7,7 +7,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   // new user registration controller(email + password)
-  async register(req : Request, res : Response){
+  register = async (req : Request, res : Response)=>{
 
     try {
       const validationResult = registerSchema.safeParse(req.body);
@@ -32,7 +32,7 @@ export class AuthController {
   }
 
   // login using email + password controller
-  async login(req: Request, res: Response) {
+   login = async(req: Request, res: Response)=> {
     try {
 
       const validationResult = loginSchema.safeParse(req.body);
