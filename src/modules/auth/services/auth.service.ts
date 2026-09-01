@@ -41,6 +41,10 @@ export class AuthService {
       throw new Error("Invalid credentials");
     }
 
+    if (user.status !== "active") {
+      throw new Error("User account is not active");
+    }
+
     const passwordH = await this.passwordRepository.findByUserId(user.id);
 
     if (!passwordH) {
@@ -62,8 +66,8 @@ export class AuthService {
     });
 
     const refreshToken = this.tokenService.generateRefreshToken({
-      userId : user.id,
-    })
+      userId: user.id,
+    });
 
     return {
       accessToken,
