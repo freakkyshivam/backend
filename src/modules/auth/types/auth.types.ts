@@ -32,8 +32,3 @@ export type Session = {
   createdAt: Date;
 };
 
-export type pendingSignupData = {
-  name: string;
-  email: string;
-  passwordHash: string;
-};
