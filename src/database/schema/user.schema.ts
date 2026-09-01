@@ -9,14 +9,20 @@ export const roleEnum = pgEnum("role", [
   "field_inspector",
 ]);
 
+export const userStatusEnum = pgEnum("user_status", [
+  "active",
+  "inactive",
+  "suspended",
+]);
+
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
 
   name: varchar("name", { length: 255 }).notNull(),
-  email: varchar("email", { length: 255 }).notNull(),
-  role: roleEnum("role").notNull(),
-  status: varchar("status", { length: 20 }).notNull().default("active"),
+  email: varchar("email", { length: 255 }).notNull().unique(),
+  role: roleEnum("role").default("normal_user").notNull(),
+  status: userStatusEnum("status").notNull().default("active"),
   createdAt: timestamp("created_at").defaultNow().notNull(),
 });
 
-export default users
+export default users;
