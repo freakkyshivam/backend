@@ -8,9 +8,15 @@ export type UserRole =
 
 export type User = {
   id: string;
+  name : string;
   email: string;
-  passwordHash: string;
   role: UserRole;
+};
+
+export type UserPassword = {
+  id: string;
+  userId: string;
+  passwordHash: string;
 };
 
 export type tokenPayLoad = {
