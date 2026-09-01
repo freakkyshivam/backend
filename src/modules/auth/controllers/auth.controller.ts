@@ -75,7 +75,9 @@ export class AuthController {
 
       const { email, password } = validationResult.data;
 
-      const result = await this.authService.login(email, password);
+      const userAgent = req.get("user-agent") ?? undefined;
+
+      const result = await this.authService.login(email, password, userAgent);
 
       return res.json(result);
     } catch (error) {
