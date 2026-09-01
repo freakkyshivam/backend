@@ -20,3 +20,14 @@ export type loginResult = {
     role: UserRole;
   };
 };
+
+export type Session = {
+  sid: string;
+  userId: string;
+  refreshTokenHash: string;
+  expiresAt: Date;
+  userAgent: string | null;
+  revokedAt: Date | null;
+  lastUsedAt: Date | null;
+  createdAt: Date;
+};
