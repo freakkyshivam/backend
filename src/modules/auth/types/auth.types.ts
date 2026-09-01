@@ -1,17 +1,4 @@
-export type UserRole =
-  | "normal_user"
-  | "admin"
-  | "corporate_mgmt"
-  | "compliance_officer"
-  | "mine_officer"
-  | "field_inspector";
-
-export type User = {
-  id: string;
-  name : string;
-  email: string;
-  role: UserRole;
-};
+ import type { UserRole } from "../../../domain/user/user-role.js";
 
 export type UserPassword = {
   id: string;
