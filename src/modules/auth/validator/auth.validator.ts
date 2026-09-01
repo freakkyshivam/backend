@@ -26,3 +26,15 @@ export const registerSchema = z.object({
     .string("Password is required")
     .min(8, "Password must be at least 8 characters"),
 });
+
+export const verifyEmailSchema = z.object({
+      email: z
+    .email("Invalid email")
+    .trim()
+    .toLowerCase(),
+
+  otp: z
+  .string("OTP is required")
+  .length(6, "OTP must be 6 digits")
+  .regex(/^\d{6}$/, "OTP must contain only digits")
+})
