@@ -1,4 +1,4 @@
-import type { RedisService } from "../infrastructure/otp/redis-service.js";
+import type { OtpService } from "../interfaces/otp-service.interface.js";
 import type { PasswordHasher } from "../interfaces/password-hasher.interface.js";
 import type { PasswordRepository } from "../interfaces/password-repository.interface.js";
 import type { PendingSignupRepository } from "../interfaces/pending-signup-repository.interface.js";
@@ -14,7 +14,7 @@ export class AuthService {
     private readonly passwordRepository: PasswordRepository,
     private readonly passwordHasher: PasswordHasher,
     private readonly tokenService: TokenService,
-    private readonly redisService: RedisService,
+    private readonly otpService: OtpService,
     private readonly pendingSignupRepository: PendingSignupRepository,
     private readonly sessionRepository : SessionRepository
   ) {}
@@ -35,14 +35,14 @@ export class AuthService {
       passwordHash,
     });
 
-    const OTP = await this.redisService.generateOtp(email);
+    const OTP = await this.otpService.generateOtp(email);
 
     console.log("Email verification otp : ", OTP);
   }
 
   // verify otp
 async verifyEmail(email: string, otp: string) {
-  const result = await this.redisService.verifyOtp(email, otp);
+  const result = await this.otpService.verifyOtp(email, otp);
 
   if (!result) {
     throw new Error("Invalid or expired OTP");

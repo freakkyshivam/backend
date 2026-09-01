@@ -7,6 +7,10 @@ const router = express.Router();
 const authController = new AuthController(authService) 
 
 router.post('/login', authController.login);
-router.post('/register', authController.register)
+router.post('/register', authController.register);
+router.post(
+  "/verify-email",
+  authController.verifyEmail
+);
 
 export default router;
