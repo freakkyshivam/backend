@@ -1,15 +1,18 @@
 
-import type { pendingSignupData } from "../types/auth.types.js"
-
+export type PendingSignupData = {
+  name: string;
+  email: string;
+  passwordHash: string;
+};
 export interface PendingSignupRepository {
   save(
     email: string,
-    signupData: pendingSignupData
+    signupData: PendingSignupData
   ): Promise<void>;
 
   get(
     email: string
-  ): Promise<pendingSignupData | null>;
+  ): Promise<PendingSignupData | null>;
 
   delete(
     email: string
