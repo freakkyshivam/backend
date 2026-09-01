@@ -13,6 +13,7 @@ export type tokenPayLoad = {
 
 export type loginResult = {
   accessToken: string;
+  refreshToken : string;
   user: {
     id: string;
     email: string;
