@@ -21,9 +21,11 @@ export class AuthController {
 
       const {name, email, password} = validationResult.data;
 
-      const result = await this.authService.register(name, email, password);
+      await this.authService.register(name, email, password);
 
-      return res.status(201).json(result);
+      return res.status(201).json({
+      message: "OTP sent for email verification",
+    });
     } catch (error) {
       return res.status(400).json({
         message : error instanceof Error ? error.message : "Registration failed"
