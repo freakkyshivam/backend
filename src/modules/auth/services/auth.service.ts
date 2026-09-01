@@ -37,6 +37,37 @@ export class AuthService {
     console.log("Email verification otp : ", OTP);
   }
 
+  // verify otp
+async verifyEmail(email: string, otp: string) {
+  const result = await this.redisService.verifyOtp(email, otp);
+
+  if (!result) {
+    throw new Error("Invalid or expired OTP");
+  }
+
+  const pendingSignupData =
+    await this.pendingSignupRepository.get(email);
+
+  if (!pendingSignupData) {
+    throw new Error("Pending registration not found or expired");
+  }
+
+  const user = await this.userRepository.createUser(
+    pendingSignupData.name,
+    pendingSignupData.email,
+    "normal_user"
+  );
+
+  await this.passwordRepository.create(
+    user.id,
+    pendingSignupData.passwordHash
+  );
+
+  await this.pendingSignupRepository.delete(email);
+
+  return user;
+}
+
   // login via password service
   async login(email: string, password: string): Promise<loginResult> {
     const user = await this.userRepository.findByEmail(email);
