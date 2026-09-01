@@ -1,4 +1,4 @@
- import type { UserRole } from "../../../domain/user/user-role.js";
+import type { UserRole } from "../../../domain/user/user-role.js";
 
 export type UserPassword = {
   id: string;
@@ -8,12 +8,12 @@ export type UserPassword = {
 
 export type tokenPayLoad = {
   userId: string;
-  role: UserRole
+  role: UserRole;
 };
 
 export type loginResult = {
   accessToken: string;
-  refreshToken : string;
+  refreshToken: string;
   user: {
     id: string;
     email: string;
@@ -30,4 +30,10 @@ export type Session = {
   revokedAt: Date | null;
   lastUsedAt: Date | null;
   createdAt: Date;
+};
+
+export type pendingSignupData = {
+  name: string;
+  email: string;
+  passwordHash: string;
 };
