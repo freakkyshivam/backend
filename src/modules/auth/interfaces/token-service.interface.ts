@@ -1,6 +1,13 @@
-import type { tokenPayLoad } from "../types/auth.types.js";
+import type { UserRole } from "../types/auth.types.js";
 
 export interface TokenService {
-  generateAccessToken(payload: tokenPayLoad): string;
-  generateRefreshToken(payload: tokenPayLoad): string;
+  generateAccessToken(payload: {
+    userId: string;
+    role: UserRole;
+  }): string;
+
+  generateRefreshToken(payload: {
+    userId: string;
+    role: UserRole;
+  }): string;
 }
